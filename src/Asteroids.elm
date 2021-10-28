@@ -5,7 +5,6 @@ import Random
 import Set
 import Time as PosixTime
 
-
 game =
   { initialState = initialState
   , updateState = update
@@ -41,8 +40,9 @@ type alias GameObject =
 
 type alias Model =
   { ship : GameObject
+  , justFiredShot : Bool
   , asteroids : List GameObject
-  , bullets : List GameObject 
+  , bullets : List GameObject
   }
 
 initialState : Model
@@ -57,6 +57,7 @@ initialState =
       , radius = shipSize
       , shape = shipShape
       }
+  , justFiredShot = False
   , asteroids = []
   , bullets = []
   }
@@ -101,9 +102,15 @@ update computer model =
 
 shoot computer model =
   if spacePressed computer then
-      { model | bullets = model.bullets ++ newBullet model }
+    if model.justFiredShot then
+      model  -- make user release fire button to fire again
+    else
+      { model
+        | bullets = model.bullets ++ newBullet model
+        , justFiredShot = True
+      }
   else
-    model
+    { model | justFiredShot = False }
 
 newBullet model  =
   let

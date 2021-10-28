@@ -2,7 +2,6 @@ module Mario exposing (game)
 
 import Playground exposing (..)
 
-
 -- PHYSICS PARAMETERS
 
 runSpeed = 3
@@ -99,7 +98,7 @@ update computer mario =
 
     gravityApplied = mario.vy - dt * gravity
     vy =
-      if mario.vy == 0 && computer.keyboard.up then  -- on ground, new jump starts
+      if mario.y == 0 && computer.keyboard.up then  -- on ground, new jump starts
         jumpPower
       else if computer.keyboard.up then  -- in air, holding jump key for long jump
         gravityApplied

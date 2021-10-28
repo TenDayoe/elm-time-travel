@@ -41,12 +41,12 @@ addTimeTravel rawGame =
           in
             rectangle color width historyBarHeight  
               |> move (computer.screen.left + width / 2) (computer.screen.top - historyBarHeight / 2)
-              |> fade 0.7
+              |> fade 0.9
         helpMessage =
             if model.paused then
-              "Drag bar to time travel  •  Press T to resume  •  Press C to clear history & restart"
+              "Drag bar to time travel  •  Press R to resume  •  Press C to clear history & restart"
             else
-              "Press T to freeze time and save history"
+              "Press T to time travel"
       in
         (rawGame.view computer model.rawModel) ++
           [ historyBar black maxVisibleHistory
@@ -80,23 +80,18 @@ addTimeTravel rawGame =
         -- Toggling pause mode
 
         else if List.any (\key -> Set.member key computer.keyboard.keys) ["t", "T"] then
-          if model.paused then
-            { model
-              | paused = False
-              , history = List.take model.historyPlaybackPosition model.history  -- start at selected point...
-            }
-          else
-            { model | paused = True}
+          { model | paused = True}
+
+        else if List.any (\key -> Set.member key computer.keyboard.keys) ["r", "R"] then
+          { model
+            | paused = False
+            , history = List.take model.historyPlaybackPosition model.history  -- start at selected point...
+          }
 
         -- Clear history & restart
 
         else if model.paused && List.any (\key -> Set.member key computer.keyboard.keys) ["c", "C"] then
-          { model
-            | paused = False
-            , rawModel = rawGame.initialState
-            , history = []
-            , historyPlaybackPosition = 0
-          }
+          initialStateWithTimeTravel
 
         -- Paused and doing nothing
 
