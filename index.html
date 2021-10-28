@@ -10,8 +10,11 @@
         margin: 0;
         padding: 0;
       }
+      svg {
+        cursor: move;
+      }
       svg text {
-        cursor: default;
+        pointer-events: none;
         user-select: none;
         -webkit-user-select: none;
       }
@@ -22,17 +25,8 @@
 </body>
 
 <script type="text/javascript">
-
-let elmModule = 'Asteroids';
-
-let storageKey = 'time-travel-history';
-let storedState = sessionStorage.getItem(storageKey);
-let startingState = storedState ? JSON.parse(storedState) : null;
-let app = Elm[elmModule].init({ flags: startingState });
-app.ports.saveHistory.subscribe((state) => {
-    sessionStorage.setItem(storageKey, JSON.stringify(state));
-});  
-
+  let elmModule = 'Main';
+  let app = Elm[elmModule].init();
 </script>
 
 </html>

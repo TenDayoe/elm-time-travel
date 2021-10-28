@@ -1,13 +1,18 @@
-module Asteroids exposing (..)
+module Asteroids exposing (game)
 
 import Playground exposing (..)
-import TimeTravel exposing (..)
 import Random
 import Set
 import Time as PosixTime
 
 
--- PHYSICS PARAMETERS
+game =
+  { initialState = initialState
+  , updateState = update
+  , view = view
+  }
+
+------ PHYSICS PARAMETERS ------
 
 asteroidCount = 10
 initialAsteroidSpeed = 2
@@ -15,15 +20,13 @@ largeAsteroidRadius = 30
 minAsteroidRadius = 6
 asteroidComplexity = 0.4
 shipSize = 16
-bulletSpeed = 5
+bulletSpeed = 15
 asteroidColor = (rgb 160 160 160)
 shipColor = (rgb 255 120 60)
 bulletColor = yellow
 bulletRadius = 2
 
--- MAIN
-
-main = gameWithTimeTravel view update initialState
+------ MODEL ------
 
 type alias GameObject =
   { x : Float
@@ -44,7 +47,16 @@ type alias Model =
 
 initialState : Model
 initialState =
-  { ship = { x = 0, y = 0, dir = 0, spin = 0, dx = 0, dy = 0, radius = shipSize, shape = shipShape}
+  { ship =
+      { x = 0
+      , y = 0
+      , dir = 0
+      , spin = 0
+      , dx = 0
+      , dy = 0
+      , radius = shipSize
+      , shape = shipShape
+      }
   , asteroids = []
   , bullets = []
   }
@@ -63,7 +75,7 @@ bulletShape =
   , (0, -bulletRadius)
   ]
 
--- VIEW
+------ VIEW ------
 
 view computer model =
   [rectangle black computer.screen.width computer.screen.height]
@@ -79,7 +91,7 @@ viewGameObject color opacity obj =
     |> move obj.x obj.y
 
 
--- UPDATE
+------ UPDATE ------
 
 update computer model =
   model
@@ -88,37 +100,45 @@ update computer model =
     |> checkBulletCollisions
 
 shoot computer model =
-  if Set.member " " computer.keyboard.keysJustPressed then
-    let
-      shipHeadingX = cos (degrees model.ship.dir)
-      shipHeadingY = sin (degrees model.ship.dir)
-    in
-      { model
-        | bullets = model.bullets ++
-          [
-            { x = model.ship.x + shipSize * shipHeadingX
-            , y = model.ship.y + shipSize * shipHeadingY
-            , dx = model.ship.dx + shipHeadingX * bulletSpeed
-            , dy = model.ship.dy + shipHeadingY * bulletSpeed
-            , dir = 0
-            , spin = 0
-            , radius = bulletRadius
-            , shape = bulletShape
-            }
-          ]
-      }
+  if spacePressed computer then
+      { model | bullets = model.bullets ++ newBullet model }
   else
     model
 
+newBullet model  =
+  let
+    shipHeadingX = cos (degrees model.ship.dir)
+    shipHeadingY = sin (degrees model.ship.dir)
+  in
+    [
+      { x = model.ship.x + shipSize * shipHeadingX
+      , y = model.ship.y + shipSize * shipHeadingY
+      , dx = model.ship.dx + shipHeadingX * bulletSpeed
+      , dy = model.ship.dy + shipHeadingY * bulletSpeed
+      , dir = 0
+      , spin = 0
+      , radius = bulletRadius
+      , shape = bulletShape
+      }
+    ]
+
 handleMotion computer model =
   { model
-    | ship      = (shipControls computer >> moveObject computer) model.ship
-    , asteroids = List.map (moveObject computer) model.asteroids |> regenerateIfEmpty computer
+    | ship      = (applyShipControls computer >> moveObject computer) model.ship
+    , asteroids = List.map (moveObject computer) model.asteroids |> regenerateAsteroidsIfEmpty computer
     , bullets   = List.map (moveObject computer) model.bullets
   }
 
-shipControls : Computer -> GameObject -> GameObject
-shipControls computer ship =
+moveObject : Computer -> GameObject -> GameObject
+moveObject computer obj =
+  { obj
+    | x = obj.x + obj.dx |> wrap (computer.screen.left - largeAsteroidRadius)   (computer.screen.right + largeAsteroidRadius)
+    , y = obj.y + obj.dy |> wrap (computer.screen.bottom - largeAsteroidRadius) (computer.screen.top + largeAsteroidRadius)
+    , dir = obj.dir + obj.spin
+  }
+
+applyShipControls : Computer -> GameObject -> GameObject
+applyShipControls computer ship =
   let
     thrust = 0.1 * toY computer.keyboard
     dir = degrees ship.dir
@@ -164,7 +184,7 @@ splitAsteroids bigAsteroids =
 halfOf asteroid whichHalf =
   let
     (r, θ) = toPolar (asteroid.dx, asteroid.dy)
-    (newdx, newdy) = fromPolar (r, θ + 1.7 * ((toFloat whichHalf) - 0.5))
+    (newdx, newdy) = fromPolar (r, θ + 1.2 * ((toFloat whichHalf) - 0.5))
   in
     { asteroid
       | radius = asteroid.radius / (sqrt 2)
@@ -173,14 +193,14 @@ halfOf asteroid whichHalf =
       , shape = eliminateSome 0.3 whichHalf asteroid.shape |> List.map (scalePoint (1 / sqrt 2))
     }
 
-
-regenerateIfEmpty : Computer -> List GameObject -> List GameObject
-regenerateIfEmpty computer asteroids =
+regenerateAsteroidsIfEmpty : Computer -> List GameObject -> List GameObject
+regenerateAsteroidsIfEmpty computer asteroids =
   if List.isEmpty asteroids then
     generateAsteroids computer
   else
     asteroids
 
+generateAsteroids : Computer -> List GameObject
 generateAsteroids computer =
   let
     randomX = Random.float computer.screen.left computer.screen.right
@@ -201,7 +221,7 @@ generateAsteroids computer =
         , seed5
         )
 
-    initialSeed = Random.initialSeed (PosixTime.posixToMillis (extractPosix computer.time))
+    initialSeed = Random.initialSeed 55105
 
     (result, lastSeed) = List.foldl addRandomAsteroid ([], initialSeed) (List.range 1 asteroidCount)
   in
@@ -225,15 +245,7 @@ randomAsteroidShape radius seed0 =
   in
     List.foldl addRandomVertex ([], seed0) (List.range 1 vertexCount)
 
-moveObject : Computer -> GameObject -> GameObject
-moveObject computer obj =
-  { obj
-    | x = obj.x + obj.dx |> wrap (computer.screen.left - largeAsteroidRadius)   (computer.screen.right + largeAsteroidRadius)
-    , y = obj.y + obj.dy |> wrap (computer.screen.bottom - largeAsteroidRadius) (computer.screen.top + largeAsteroidRadius)
-    , dir = obj.dir + obj.spin
-  }
-
--- Helpers
+------ Helpers ------
 
 wrap min max x =
   let
@@ -266,3 +278,6 @@ eliminateSome fractionToRemove offset list =
   in
     List.foldr ditherFilter ([], (toFloat offset) * fractionToRemove) list
       |> Tuple.first
+
+spacePressed computer =
+  Set.member " " computer.keyboard.keys

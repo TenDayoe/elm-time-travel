@@ -1,21 +1,24 @@
-module Mario exposing (..)
+module Mario exposing (game)
 
 import Playground exposing (..)
-import TimeTravel exposing (..)
 
 
 -- PHYSICS PARAMETERS
 
-runSpeed = 2
+runSpeed = 3
 coast = 0.9
-jumpPower = 9
+jumpPower = 10
 jumpCutoff = 0.8
-gravity = 0.3
+gravity = 0.25
 
 
 -- MAIN
 
-main = gameWithTimeTravel view update initialState
+game =
+  { initialState = initialState
+  , updateState = update
+  , view = view
+  }
 
 initialState =
   { x = 0
@@ -42,7 +45,6 @@ view computer mario =
     , rectangle (rgb 74 163 41) w 100  -- ground
         |> moveY b
     , mario.trace
-        |> List.map flipY  -- polygon uses flipped Y, apparently?!?
         |> pathToPolygonVertices 1.5
         |> polygon black
         |> move 0 (b + 76)
