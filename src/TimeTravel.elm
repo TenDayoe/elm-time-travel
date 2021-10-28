@@ -2,8 +2,6 @@ module TimeTravel exposing (addTimeTravel)
 
 import Playground exposing (..)
 import Set
-import Time as PosixTime
-import Browser
 
 type alias TimeTravelModel rawModel =
   { history : List Computer

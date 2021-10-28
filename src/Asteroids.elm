@@ -3,7 +3,6 @@ module Asteroids exposing (game)
 import Playground exposing (..)
 import Random
 import Set
-import Time as PosixTime
 
 game =
   { initialState = initialState
