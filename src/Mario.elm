@@ -1,3 +1,9 @@
+--
+-- The classic game of Asteroids, minus the pesky problem of dying.
+-- 
+-- Author: Evan Czaplicki, with modifications by Paul Cantrell
+--         Based on https://elm-lang.org/examples/mario
+--
 module Mario exposing (game)
 
 import Playground exposing (..)
@@ -6,9 +12,9 @@ import Playground exposing (..)
 
 runSpeed = 3
 coast = 0.9
-jumpPower = 10
-jumpCutoff = 0.8
-gravity = 0.25
+jumpPower = 8
+jumpCutoff = 0.5
+gravity = 0.2
 
 
 -- MAIN
@@ -48,29 +54,12 @@ view computer mario =
         |> polygon black
         |> move 0 (b + 76)
         |> fade 0.5
-    , marioSprite mario
+    , marioSpriteName mario
         |> image 70 70
         |> move mario.x (b + 76 + mario.y)
     ]
 
--- Elm’s playground package doesn't have any way to stroke a path.
--- This function makes a polygon that traces across the given points
--- offset slightly, then traces in reverse order with the opposite offset.
-pathToPolygonVertices thickness path =
-  (path |> offsetPath (thickness, -thickness))
-  ++
-  (List.reverse path |> offsetPath (-thickness, thickness))
-
-offsetPath offset points =
-    List.map (pointAdd offset) points
-
-pointAdd (x0, y0) (x1, y1) =
-  (x0 + x1, y0 + y1)
-
-flipY (x, y) =
-  (x, -y)
-
-marioSprite mario =
+marioSpriteName mario =
   let
     stance =
       if mario.y > 0 then
@@ -128,3 +117,19 @@ addPointUnlessDuplicate point path =
     path
   else
     point :: path
+
+-- HELPERS
+
+-- Elm’s playground package doesn't have any way to stroke a path.
+-- This function makes a polygon that traces across the given points
+-- offset slightly, then traces in reverse order with the opposite offset.
+pathToPolygonVertices thickness path =
+  (path |> offsetPath (thickness, -thickness))
+  ++
+  (List.reverse path |> offsetPath (-thickness, thickness))
+
+offsetPath offset points =
+    List.map (pointAdd offset) points
+
+pointAdd (x0, y0) (x1, y1) =
+  (x0 + x1, y0 + y1)

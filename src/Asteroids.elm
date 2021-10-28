@@ -1,3 +1,8 @@
+--
+-- The classic game of Asteroids, minus the pesky problem of dying.
+-- 
+-- Author: Paul Cantrell
+--
 module Asteroids exposing (game)
 
 import Playground exposing (..)
@@ -181,13 +186,13 @@ splitAsteroids bigAsteroids =
       if asteroid.radius < minAsteroidRadius * 2 then
         []
       else
-        [ halfOf asteroid 0
-        , halfOf asteroid 1
+        [ splitAsteroid asteroid 0
+        , splitAsteroid asteroid 1
         ]
   in
     List.concatMap split bigAsteroids
 
-halfOf asteroid whichHalf =
+splitAsteroid asteroid whichHalf =
   let
     (r, θ) = toPolar (asteroid.dx, asteroid.dy)
     (newdx, newdy) = fromPolar (r, θ + 1.2 * ((toFloat whichHalf) - 0.5))
