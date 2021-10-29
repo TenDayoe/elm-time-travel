@@ -24,7 +24,7 @@ To launch this project, open a command line **in this project directory**, then 
 
     elm-live --open -- src/Main.elm --output=elm.js
 
-Your browser should open with a little Mario who will run and jump when you press the arrow keys. If this doesn't work, **reach out for help in the class channel** before proceeding.
+Your browser should open with a little Mario who will run and jump when you press the arrow keys, and leave a trail behind. If this doesn't work, **reach out for help in the class channel** before proceeding.
 
 **Leave the app open in your browser, and leave elm-live running in your console while you work!** If you do, the app will automatically update whenever you save changes.
 
