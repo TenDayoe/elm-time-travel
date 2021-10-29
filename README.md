@@ -22,4 +22,4 @@ Learning goals for this assignment:
 
 - Part 0: [Install tools and get oriented](docs/0-setup.md)
 - Part 1: [Make a small change](docs/1-small-change.md)
-- Part 2: [Build a time machine](docs/2-time-machine.md)
+- Part 2: [Build a time machine](docs/2-time-machine-step-0.md)

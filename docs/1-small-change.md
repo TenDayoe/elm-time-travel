@@ -14,4 +14,4 @@ You will find the [documentation for the Elm Playground module](https://package.
 
 Once you have made your change and tested it, **commit your work**. Please make sure that this change ends up in a commit of its own, separate from part 2!
 
-Did you commit your work? Get up and stretch? Proceed to [Part 2](1-time-machine.md).
+Did you commit your work? Get up and stretch? Proceed to [Part 2](2-time-machine-step-0.md).

@@ -10,10 +10,10 @@ import TimeTravel exposing (addTimeTravel)
 -- an application that Elm knows how to run.
 --
 gameApplication game =
-    Playground.game game.view game.updateState game.initialState
+  Playground.game game.view game.updateState game.initialState
 
 -- The main entry point for the app
 
 main = Mario.game
-    |> addTimeTravel
-    |> gameApplication
+  |> addTimeTravel
+  |> gameApplication
