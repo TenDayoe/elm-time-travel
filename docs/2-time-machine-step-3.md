@@ -51,7 +51,7 @@ Now add a condition to the start (make sure it’s the start!) of the if / else 
       { model
         | historyPlaybackPosition = newPlaybackPosition
       }
-  else ❰❰ existing code ❱❱
+  else ...existing code...
   ```
 </details>
 <br>
@@ -66,11 +66,11 @@ Let’s make dragging that history bar recreate past states. How will this work?
 
 You know the state that the raw game started in: it’s `rawGame.initialState`. Even after time has passed and the game has changed, `rawGame.initialState` is still there! So you can always get back the starting state of the game.
 
-You know how the game state changed from one moment to the next: that’s always `rawGame.updateState`. Any changes that happened in the game — all of them, even just time passing! — can _only_ be a result of calling `rawGame.updateState` over and over, passing in the previous state plus any user input in the form of the `computer` parameter.
+You know how the game state changed from one moment to the next: that’s always `rawGame.updateState`. Anything that ever happened in the game — anything, even just time passing! — could _only_ be a result of calling `rawGame.updateState` over and over, passing in the previous state plus any user input in the form of the `computer` parameter.
 
 And you have all that user input: you’ve saved ever `computer` value that came along, in `model.history`. So you have all the information you need to recreate the entire state of the game at any point in the past!
 
-The game state at any given moment is basically:
+The game state at any given moment `n` is basically:
 
 ```elm
 rawGame.updateState model.history[n] somePreviousState
@@ -129,11 +129,11 @@ replayHistory pastInputs =
   List.foldl ❰❰ something involving rawGame.initialState, rawGame.updateState, and pastInputs ❱❱
 ```
 
-The solution is not complicated! It may be hard to figure out, but it **is not complicated**. Study the documentation for `foldl` and thnk. If it passes the type checker, you’ve probably got it. If it gets longer than one line of code, step back and think, take a break, and/or ask for help.
+The solution is not complicated! It may be hard to figure out, but it **is not complicated**. Study the documentation for `foldl` and think. If it passes the type checker, you’ve probably got it. If it gets longer than one line of code, step back and think, take a break, and/or ask for help.
 
 ---
 
-Now, in `updateWithTimeTravel`, in that spot where you update `historyPlaybackPosition`, you need to _also_ update `rawModel`. By doing that, you will be passing the raw game one of its past states. You won’t be _updating_ that state while the time machine is paused, but the _rawGame.view_ will still see it and display it!
+Now, in `updateWithTimeTravel`, in that spot where you update `historyPlaybackPosition`, you need to _also_ update `rawModel`. By doing that, you will be passing the raw game one of its past states. You won’t be _updating_ that state while the time machine is paused, but the `rawGame.view` will still see it and display it! That’s how we see into the past.
 
 But what do you update `rawModel` _to?_ Use [`List.take`](https://package.elm-lang.org/packages/elm/core/latest/List#take) to get the sublist of `model.history` up to `newPlaybackPosition`. Then pass that list of past inputs to `replayHistory`.
 
@@ -161,7 +161,7 @@ Test this. When you freeze time with T, you should be able to drag back and fort
 
 ### Please watch your step when exiting the time machine
 
-There’s one much crucial piece: when you travel back in time and then unfreeze time, you need to remove the unused future history and restart the recording at the point you just dragged back to.
+There’s one much crucial piece: when you travel back in time and then unfreeze time, you need to remove the unused now-future history and restart the history recording at the point you just dragged back to.
 
 Find the place in the code where you unpause the game. (Where is that?) In that spot, when you update `paused` to false, you now _also_ need to update `history` to include only the portion of history up to `historyPlaybackPosition`.
 
@@ -185,9 +185,9 @@ Find the place in the code where you unpause the game. (Where is that?) In that 
 </details>
 <br>
 
-Test the app once more. Freeze, drag back in time, and then unfreeze **while watching the bar**. When you unfreeze, the bar should shrink back to the point you dragged to, instead of continuing to grow from its old size.
+Test the app once more. Freeze, drag back in time, and then unfreeze **while watching the bar**. When you unfreeze, the bar should immediately jump back to the point you dragged to, instead of continuing to grow from its old size.
 
-**Add some help text** in the view so that when the time machine is paused, in addition to telling the user they can press R to resumt, it also tells them they can drag to travel in time.
+**Add some help text** in the view so that when the time machine is paused, in addition to telling the user they can press R to resume, it also tells them they can drag to travel in time.
 
 Enjoy your time machine! I think it’s especially fun with the Asteroids game.
 
@@ -197,4 +197,8 @@ Enjoy your time machine! I think it’s especially fun with the Asteroids game.
 
 Add a feature so that the user can press C to reset the entire game and history and everything back to the initial state.
 
-It is possible to do this in only two additional lines of code (including the if statement)! However, it’s tricky to see how to make the problem that simple.
+It is possible to do this in only two additional lines of code (including the if statement)! However, it’s tricky to see how to make the problem that simple. If you are enjoying Elm, see if you can figure it out.
+
+### Big bonus challenge (VERY Optional)
+
+If you get inspired and write your own little Elm game, I would be hard pressed not to give you a few points of extra credit.

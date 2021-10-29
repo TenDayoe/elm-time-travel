@@ -61,6 +61,8 @@ updateWithTimeTravel rawGame computer model =
       | paused = False
       , history = List.take model.historyPlaybackPosition model.history  -- restart at selected point...
     }
+  else if model.paused && keyPressed "C" computer then
+    initialStateWithTimeTravel rawGame
   else if model.paused then
     model
   else

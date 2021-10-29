@@ -97,7 +97,7 @@ You probably want to close that browser window if you are going to do something 
 
 What have we done so far?
 
-- Successfully wrapped an arbitrary game inside a “time machine” layer, that can add to and control the game’s state and appearance.
+- Successfully wrapped an arbitrary game inside a “time machine” layer that can add to and control the game’s state and appearance.
 - Added controls to start and stop the flow of events to the wrapped game.
 - Created a list that holds all input the game received since starting.
 
