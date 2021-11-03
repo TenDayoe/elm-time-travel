@@ -26,9 +26,8 @@ To launch this project, open a command line **in this project directory**, then 
 
 **If you use Windows** and the command above does not work, try the following instead:
 
-- Open Powershell (not cmd)
-- Run the command `Set-ExecutionPolicy RemoteSigned` in Powershell. (You only need to do this once.)
-- Try the following command to start the Elm live compiler:
+- Open Powershell (not cmd) **as an administrator**, and run the command `Set-ExecutionPolicy RemoteSigned` in Powershell. (You only need to do this once.)
+- Then open Powershell _not_ as an administrator, and try the following command to start the Elm live compiler:
   ```
   elm-live -e "C:\Program Files (x86)\Elm\0.19.1\bin\elm.exe" --open "--" src/Main.elm --output elm.js
   ```
