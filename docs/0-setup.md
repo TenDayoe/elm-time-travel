@@ -17,12 +17,26 @@ Our class examples have run in Elm’s in-browser playground. For this project, 
         ```
 3. Install elm-live, which will run your app with automatic recompilation and reloading when you save changes:
     ```
-    npm install --global elm elm-live
+    npm install --global elm-live
     ```
 
 To launch this project, open a command line **in this project directory**, then run:
 
     elm-live --open -- src/Main.elm --output=elm.js
+
+**If you use Windows** and the command above does not work, try the following instead:
+
+- Open Powershell (not cmd)
+- Run the command `Set-ExecutionPolicy RemoteSigned` in Powershell. (You only need to do this once.)
+- Try the following command to start the Elm live compiler:
+  ```
+  elm-live -e "C:\Program Files (x86)\Elm\0.19.1\bin\elm.exe" --open "--" src/Main.elm --output elm.js
+  ```
+  …or maybe this, depending on how Elm got installed:
+  ```
+  elm-live -e $HOME\AppData\Roaming\npm\elm.cmd --open "--" src/Main.elm --output elm.js
+  ```
+
 
 Your browser should open with a little Mario who will run and jump when you press the arrow keys, and leave a trail behind. If this doesn't work, **reach out for help in the class channel** before proceeding.
 

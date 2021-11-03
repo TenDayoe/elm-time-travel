@@ -99,7 +99,7 @@ keyPressed keyName computer =
 
 You can use it like this: `keyPressed "X" computer` → boolean that says whether X is currently being pressed. (The `computer` represents all input from the outside world that the game can use: keys pressed, mouse position, size of the window, etc.)
 
-Now alter `updateWithTimeTravel` so that if T is pressed, it changes `paused` to false (“T” is for “Time travel”), if R is pressed, it changes `paused` to true (“R” is for “Resumse”), and otherwise it proceeds to the same behavior as before.
+Now alter `updateWithTimeTravel` so that if T is pressed, it changes `paused` to true (“T” is for “Time travel”), if R is pressed, it changes `paused` to false (“R” is for “Resumse”), and otherwise it proceeds to the same behavior as before.
 
 <details>
   <summary>Click for hint</summary>
