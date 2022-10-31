@@ -50,7 +50,7 @@ Look inside `src`, where you will find:
 - `Main.elm`: The main entry point for the application, which chooses which game to run
 - `TimeTravel.elm`: An empty module that you will complete later in the assignment.
 
-Open up `Main.elm`, and look for the definition of `main`. Change `Mario.game` to `Asteroid.game`. If you left elm-live running and left the app open in your browser, you should see the app switch to the new game as soon as you save changes.
+Open up `Main.elm`, and look for the definition of `main`. Change `Mario.game` to `Asteroids.game`. If you left elm-live running and left the app open in your browser, you should see the app switch to the new game as soon as you save changes.
 
 Study the source code for `Mario.elm` and `Asteroids.elm`. Each of them defines a value named `game`, which is a record containing three functions. Think:
 

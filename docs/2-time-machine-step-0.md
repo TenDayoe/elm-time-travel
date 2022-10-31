@@ -32,7 +32,7 @@ Add the `addTimeTravel` function to the pipeline, before `gameApplication`.
   <summary>Click for solution</summary>
   
   ```elm
-  main = Mario.game  -- or Asteroid.game, either should work
+  main = Mario.game  -- or Asteroids.game, either should work
     |> addTimeTravel
     |> gameApplication
   ```
